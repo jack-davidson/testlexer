@@ -1,15 +1,21 @@
 def alpha(c):
     return c.isalpha()
 
+
 def num(c):
     return c.isnumeric()
+
 
 def get_non_terminal(non_terminal_type, line, i, token=""):
     if len(line) == i or not non_terminal_type(line[i]):
         return token
     else:
-        return get_non_terminal(non_terminal_type, line, i + 1, token=token+line[i])
+        return get_non_terminal(non_terminal_type, line, i + 1,
+                                token=token+line[i])
 
+
+# TODO: make literals/identifiers use any combo of letters, can
+# be later recognized by scanner
 def get_token(text):
     for i in range(len(text)):
         if text[i].isalpha():
@@ -41,11 +47,15 @@ def lex():
         f.close()
 
     tokens = []
+    literal = False
     while len(source) > 0:
         token = get_token(source)
+        if token == "\"":
+            literal = not literal
         tokens.append(token)
         source = source[len(token):]
 
     print(tokens)
+
 
 lex()
