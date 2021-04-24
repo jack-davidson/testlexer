@@ -1,5 +1,7 @@
+#include <stdio.h>
+
 int main()
 {
-        "hello"
-	return 0;
+    printf("Hello, my name is Jack Davidson.");
+    return 0;
 }

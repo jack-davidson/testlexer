@@ -7,7 +7,9 @@ def alpha(c):
 
 
 def get_non_terminal(token_type, source, i, token=""):
-    if len(source) == i or not token_type(source[i]):
+    if len(source) == i:
+        return token
+    if not token_type(source[i]):
         return token
     else:
         return get_non_terminal(token_type, source, i + 1,
@@ -31,42 +33,44 @@ def lex(source):
                 tokens.append("\"")
                 string_literal = not string_literal
         elif string_literal:
-            print(source[i])
+            tokens[-1] += source[i]
         elif source[i].isalpha():
             # Get first alpha token from buffer of following characters.
             # The size of this buffer is decides the maximum token size.
-            token = get_non_terminal(alpha, source[:64], i)
+            token = get_non_terminal(alpha, source, i)
             tokens.append(token)
             # Set source index to next token.
             i += len(token) - 1
         elif source[i].isnumeric():
             # Get first numeric token from buffer of following characters.
             # The size of this buffer is decides the maximum token size.
-            token = get_non_terminal(num, source[:64], i)
+            token = get_non_terminal(num, source, i)
             tokens.append(token)
             i += len(token) - 1
         elif source[i] == "<":
             if source[i + 1] == "=":
                 tokens.append("<=")
             else:
-                pass
+                tokens.append(source[i])
         elif source[i] == ">":
             if source[i + 1] == "=":
                 tokens.append(">=")
             else:
-                pass
+                tokens.append(source[i])
         elif source[i] == "=":
             if source[i + 1] == "=":
                 tokens.append("==")
             else:
-                pass
+                tokens.append(source[i])
+        elif source[i].isspace():
+            pass
         else:
             tokens.append(source[i])
         i += 1
     return tokens
 
 
-with open("source.c", "r") as f:
+with open("file.json", "r") as f:
     source = f.read()
     f.close()
 
